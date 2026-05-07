@@ -10,7 +10,7 @@ COPY src ./src
 COPY public ./public
 
 ENV HTTP_HOST=0.0.0.0 \
-    HTTP_PORT=9001 \
+    HTTP_PORT=9002 \
     SMTP_HOST=0.0.0.0 \
     SMTP_PORT=25 \
     MAIL_PROVIDER=mailtm \
@@ -19,6 +19,6 @@ ENV HTTP_HOST=0.0.0.0 \
     MAX_PER_INBOX=50 \
     BASE_PATH=
 
-EXPOSE 9001 25
+EXPOSE 9002 25
 
 CMD ["node", "src/server.js"]
