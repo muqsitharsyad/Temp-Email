@@ -14,7 +14,7 @@ services:
       HTTP_PORT: 9001
       SMTP_PORT: 25
       # Sub-path saat di belakang reverse proxy. Kosongkan jika di root domain.
-      # Contoh: /dockdock/temp-number
+      # Contoh: /dockdock/temp-email
       BASE_PATH: ${BASE_PATH:-}
     ports:
       # Web UI + API

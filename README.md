@@ -41,22 +41,22 @@ seperti `r4nd0m@indigobird.com` yang siap dipakai.
 ## Deploy di belakang reverse proxy (sub-path)
 
 Jika UI akan diakses di **path**, contoh
-`https://prodev.ut.ac.id/dockdock/temp-number/`, set `BASE_PATH`:
+`https://prodev.ut.ac.id/dockdock/temp-email/`, set `BASE_PATH`:
 
 ```env
-BASE_PATH=/dockdock/temp-number
+BASE_PATH=/dockdock/temp-email
 ```
 
 Itu hanya mengubah URL **web/UI**. **Domain email** tetap harus berupa
 hostname nyata yang punya MX record (lihat bagian DNS). Tidak bisa
-`user@prodev.ut.ac.id/dockdock/temp-number` — alamat email tidak mengenal
+`user@prodev.ut.ac.id/dockdock/temp-email` — alamat email tidak mengenal
 path URL.
 
 Contoh konfigurasi nginx (di server reverse-proxy `prodev.ut.ac.id`):
 
 ```nginx
-location /dockdock/temp-number/ {
-    proxy_pass         http://APP_SERVER:3000/dockdock/temp-number/;
+location /dockdock/temp-email/ {
+    proxy_pass         http://APP_SERVER:3000/dockdock/temp-email/;
     proxy_http_version 1.1;
     proxy_set_header   Host              $host;
     proxy_set_header   X-Real-IP         $remote_addr;
@@ -73,10 +73,10 @@ Apache (`mod_proxy`, `mod_proxy_wstunnel`):
 
 ```apache
 ProxyPreserveHost On
-ProxyPass        /dockdock/temp-number/ws  ws://APP_SERVER:3000/dockdock/temp-number/ws
-ProxyPassReverse /dockdock/temp-number/ws  ws://APP_SERVER:3000/dockdock/temp-number/ws
-ProxyPass        /dockdock/temp-number/    http://APP_SERVER:3000/dockdock/temp-number/
-ProxyPassReverse /dockdock/temp-number/    http://APP_SERVER:3000/dockdock/temp-number/
+ProxyPass        /dockdock/temp-email/ws  ws://APP_SERVER:3000/dockdock/temp-email/ws
+ProxyPassReverse /dockdock/temp-email/ws  ws://APP_SERVER:3000/dockdock/temp-email/ws
+ProxyPass        /dockdock/temp-email/    http://APP_SERVER:3000/dockdock/temp-email/
+ProxyPassReverse /dockdock/temp-email/    http://APP_SERVER:3000/dockdock/temp-email/
 ```
 
 > Reverse proxy di atas hanya melayani **HTTP/HTTPS**. Lalu lintas **SMTP
@@ -102,7 +102,7 @@ MAIL_DOMAINS=tempmail.ut.ac.id
 ```
 
 Hasil: alamat email yang dipakai user adalah `apa-saja@tempmail.ut.ac.id`,
-sementara UI dibuka di `https://prodev.ut.ac.id/dockdock/temp-number/`.
+sementara UI dibuka di `https://prodev.ut.ac.id/dockdock/temp-email/`.
 
 Bisa multi-domain, pisahkan koma:
 ```env
@@ -121,7 +121,7 @@ MAIL_DOMAINS=mail.example.com,inbox.contoh.id
 | `SMTP_PORT`         | `25`            | Port SMTP inbound (mode `smtp`).                  |
 | `HTTP_HOST`         | `0.0.0.0`       | Bind address HTTP.                                |
 | `SMTP_HOST`         | `0.0.0.0`       | Bind address SMTP.                                |
-| `BASE_PATH`         | *(kosong)*      | Sub-path UI di balik reverse proxy, misal `/dockdock/temp-number`. |
+| `BASE_PATH`         | *(kosong)*      | Sub-path UI di balik reverse proxy, misal `/dockdock/temp-email`. |
 
 ## Catatan port 25
 Banyak provider cloud (AWS, GCP, Azure, Oracle) **memblokir port 25 inbound

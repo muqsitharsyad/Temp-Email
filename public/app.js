@@ -1,6 +1,16 @@
 'use strict';
 
-const BASE = (window.__APP_CONFIG__ && window.__APP_CONFIG__.basePath) || '';
+// Compute base path from where index.html was served from. This makes the
+// front-end work regardless of whether it is served at "/" or under a
+// reverse-proxy sub-path like "/dockdock/temp-email/".
+const BASE = (function () {
+  let p = window.location.pathname || '/';
+  // strip filename if any (e.g. /foo/index.html -> /foo/)
+  if (!p.endsWith('/')) p = p.replace(/\/[^/]*$/, '/');
+  // strip trailing slash so we can do BASE + '/api/...'
+  if (p.endsWith('/')) p = p.slice(0, -1);
+  return p; // '' for root
+})();
 const api = (p) => BASE + p;
 
 const $ = (sel) => document.querySelector(sel);

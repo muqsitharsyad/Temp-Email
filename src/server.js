@@ -14,7 +14,7 @@ const MAX_PER_INBOX = parseInt(process.env.MAX_PER_INBOX || '50', 10);
 // 'smtp' (default) = self-hosted SMTP; 'mailtm' = UI-only client of api.mail.tm
 const PROVIDER = (process.env.MAIL_PROVIDER || 'smtp').toLowerCase();
 
-// Optional sub-path mount (e.g. "/dockdock/temp-number") for reverse-proxy deploys.
+// Optional sub-path mount (e.g. "/dockdock/temp-email") for reverse-proxy deploys.
 const BASE_PATH = normalizeBasePath(process.env.BASE_PATH || '');
 
 function normalizeBasePath(p) {

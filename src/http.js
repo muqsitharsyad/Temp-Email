@@ -13,7 +13,7 @@ function createHttpServer({ store, domains, basePath = '', provider = 'smtp', lo
   app.use(express.json({ limit: '256kb' }));
 
   // Mount everything on a router so the whole app can live under a sub-path
-  // (useful when served behind a reverse proxy like /dockdock/temp-number/).
+  // (useful when served behind a reverse proxy like /dockdock/temp-email/).
   const router = express.Router();
 
   // ---- API ----
@@ -60,26 +60,35 @@ function createHttpServer({ store, domains, basePath = '', provider = 'smtp', lo
   router.get(['/', '/index.html'], (_req, res) => {
     const fs = require('fs');
     let html = fs.readFileSync(path.join(publicDir, 'index.html'), 'utf8');
-    const cfg = `<script>window.__APP_CONFIG__=${JSON.stringify({ basePath })};</script>`;
-    html = html.replace('</head>', `${cfg}</head>`);
+    // We don't inject basePath: front-end computes it from window.location at runtime,
+    // so the same HTML works whether served at "/" or behind a sub-path proxy.
     res.type('html').send(html);
   });
   router.use(express.static(publicDir));
 
-  // Mount router under basePath ('' or '/dockdock/temp-number')
+  // Mount router at BOTH the root AND the basePath. This way the app keeps
+  // working regardless of whether the reverse proxy strips the prefix or
+  // forwards it as-is.
+  app.use(router);
   if (basePath) {
-    // Redirect bare basePath without trailing slash so relative URLs resolve
     app.get(basePath, (_req, res) => res.redirect(basePath + '/'));
     app.use(basePath, router);
-  } else {
-    app.use(router);
   }
 
   const server = http.createServer(app);
 
   // ---- WebSocket for real-time push ----
-  const wsPath = (basePath || '') + '/ws';
-  const wss = new WebSocketServer({ server, path: wsPath });
+  // Accept WS at both /ws and <basePath>/ws for the same reason.
+  const wsPaths = basePath ? ['/ws', basePath + '/ws'] : ['/ws'];
+  const wss = new WebSocketServer({ noServer: true });
+  server.on('upgrade', (req, socket, head) => {
+    const url = req.url.split('?')[0];
+    if (!wsPaths.includes(url)) {
+      socket.destroy();
+      return;
+    }
+    wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws, req));
+  });
 
   /** @type {Map<string, Set<import('ws').WebSocket>>} */
   const subs = new Map();
