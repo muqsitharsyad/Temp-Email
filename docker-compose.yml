@@ -1,0 +1,24 @@
+services:
+  temp-email:
+    build: .
+    image: temp-email:latest
+    container_name: temp-email
+    restart: unless-stopped
+    environment:
+      # Backend: 'mailtm' (tanpa domain) atau 'smtp' (self-host).
+      MAIL_PROVIDER: ${MAIL_PROVIDER:-mailtm}
+      # Hanya relevan saat MAIL_PROVIDER=smtp
+      MAIL_DOMAINS: ${MAIL_DOMAINS:-example.test}
+      MAIL_TTL_MINUTES: ${MAIL_TTL_MINUTES:-60}
+      MAX_PER_INBOX: ${MAX_PER_INBOX:-50}
+      HTTP_PORT: 9001
+      SMTP_PORT: 25
+      # Sub-path saat di belakang reverse proxy. Kosongkan jika di root domain.
+      # Contoh: /dockdock/temp-number
+      BASE_PATH: ${BASE_PATH:-}
+    ports:
+      # Web UI + API
+      - "${HTTP_PORT:-9001}:9001"
+      # SMTP inbound — HANYA dipakai saat MAIL_PROVIDER=smtp.
+      # Aktifkan baris di bawah jika Anda self-host SMTP (butuh port 25 publik).
+      # - "${SMTP_PORT:-25}:25"

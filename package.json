@@ -1,0 +1,20 @@
+{
+  "name": "temp-email",
+  "version": "1.0.0",
+  "description": "Lightweight self-hosted temporary email service for receiving OTPs and other inbound mail.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mailparser": "^3.7.2",
+    "smtp-server": "^3.13.6",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Temp Email</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%89%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">✉️</span>
+      <span>Temp Email</span>
+    </div>
+    <div class="address-bar">
+      <input id="address" type="text" autocomplete="off" spellcheck="false" placeholder="user@domain" />
+      <select id="domain" title="Domain"></select>
+      <button id="copyBtn" title="Salin alamat">Salin</button>
+      <button id="randomBtn" title="Acak alamat baru">Baru</button>
+      <button id="historyBtn" title="Riwayat alamat">▾</button>
+      <ul id="historyList" class="history hidden"></ul>
+    </div>
+    <div class="status">
+      <label class="auto-new" title="Tiap buka aplikasi langsung dapat alamat baru">
+        <input id="autoNew" type="checkbox" /> auto-baru
+      </label>
+      <span id="liveDot" class="dot" title="Status koneksi"></span>
+      <span id="liveText">menghubungkan…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="inbox">
+      <div class="inbox-header">
+        <strong>Kotak Masuk</strong>
+        <button id="refreshBtn" title="Muat ulang">↻</button>
+        <button id="clearBtn" title="Kosongkan">🗑</button>
+      </div>
+      <ul id="messageList" class="message-list">
+        <li class="empty">Belum ada email. Silakan tunggu…</li>
+      </ul>
+    </aside>
+
+    <section class="viewer" id="viewer">
+      <div class="placeholder">
+        <h2>Selamat datang 👋</h2>
+        <p>Pilih atau acak alamat di atas, lalu gunakan untuk mendaftar / menerima OTP.</p>
+        <p>Email yang masuk akan otomatis muncul di sini secara realtime.</p>
+        <p class="hint">TTL: pesan akan terhapus otomatis setelah waktu yang dikonfigurasi server.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
